@@ -1,0 +1,147 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{ctex}
+\usepackage{amsmath,amscd,amsbsy,amssymb,latexsym,url,bm,amsthm}
+\usepackage{epsfig,graphicx,subfigure}
+\usepackage{enumitem,balance}
+\usepackage{wrapfig}
+\usepackage{mathrsfs,euscript}
+\usepackage[usenames]{xcolor}
+\usepackage{hyperref}
+\usepackage[vlined,ruled,linesnumbered]{algorithm2e}
+\usepackage{amsfonts}
+\hypersetup{colorlinks=true,linkcolor=black}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{solution}{Solution}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\postscript}[2]
+ {\setlength{\epsfxsize}{#2\hsize}
+  \centerline{\epsfbox{#1}}}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\setlength{\oddsidemargin}{-0.365in}
+\setlength{\evensidemargin}{-0.365in}
+\setlength{\topmargin}{-0.3in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{10.1in}
+\setlength{\textwidth}{7in}
+\makeatletter \renewenvironment{proof}[1][Proof] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\makeatletter
+\renewenvironment{solution}[1][Solution] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+
+\begin{document}
+\noindent
+
+%========================================================================
+\noindent\framebox[\linewidth]{\shortstack[c]{
+\Large{\textbf{Lab00-Proof}}\vspace{1mm}\\
+CS214-Algorithm and Complexity, Xiaofeng Gao, Spring 2019.}}
+\begin{center}
+\footnotesize{\color{red}$*$ If there is any problem, please contact TA Jiahao Fan.}
+
+% Please write down your name, student id and email.
+\footnotesize{\color{blue}$*$ Name:Lynn Xiao  \quad Student ID:\_\_\_\_\_\_\_\_\_ \quad Email: \_\_\_\_\_\_\_\_\_\_\_\_}
+\end{center}
+
+\begin{enumerate}
+    \item
+    Prove that for any integer $n>2$, there is a prime $p$ satisfying $n<p<n!$. {\color{blue}(Hint: consider a prime factor $p$ of $n!-1$ and prove by contradiction)}
+	\begin{proof}
+~\\
+~\\
+(i) \textbf{Claim 1.1: }For any integer $n$ \textgreater 2, $n!$ $-$ 1 \textgreater $n$.
+
+Since $n$ \textgreater  2, $n$! $\ge$ 2$n$ \textgreater $n$+1. So we have that for any integer \textgreater 2, $n!$ $-$ 1 \textgreater  n.
+
+\textbf{Claim 2.2:} $\forall$ $n$ $\in$ $\mathbb{N}$ with n $\ge$ 2, it has prime factorization.
+
+Define $P(n)$ be the statement that "n is either prime or product of two or more primes". We only have to prove that $P(n)$ is true for every n $\ge$ 2.
+
+First, $P(2)$ is true because 2 is a prime. Assume $P(k)$ is true for $k \ge 2$, then our goal is to prove $P(k+1)$ is true.
+
+According to Strong Principle, for $k$ $\ge$ 2 and 2 $\le$ $n$ $\le$ k, $P(n)$ is true.
+
+If $P(k+1)$ is a prime, it's obviously that $P(k+1)$ is true.
+
+If $P(k+1)$ is not a prime, by definition of a prime, $k + 1 = r \times s$, where $r$ and $s$ are positive integers greater than 1 and less than $k + 1$. It follows that 2 $\le$ $r$ $\le$ k and 2 $\le$ $s$ $\le$ k. Thus by induction hypothesis, both $r$ and $s$ are either prime or the product of two or more primes. Thus, $P(k+1)$ is true.
+
+(ii)It obviously that $n !$ is not a prime,so from Claim 2.2, we can know that $n !$ has prime factorization, so there must be a prime $p$ that satisfies $p$ \textless $n ! $ . To show $p$ must be greater than $n$, we can first assume that $p$ $\le$ $n$. From Claim 1.1 and 1.2 we know that $n!-1$ has  prime factor, we can assume that $p$ is a factor of $n!-1$ which is smaller than n.
+
+Then $p$ must also be a factor of $n !$ , because $p$ is both the factor of $n!$ and $n!-1$, $p$ can only be 1, which contradicts the fact that $p$ is a prime.
+
+Therefore, the assumption is true.
+	\end{proof}
+    \item
+    Use the minimal counterexample principle to prove that for any integer $n>17$, there exist integers $i_n\ge 0$ and $j_n\ge 0$, such that $n = i_n \times 4 + j_n \times 7$.
+    \begin{proof}
+        First, we will show some base case when 17 \textless n \textless 32.
+    \begin{center}    
+        $18=1\times4+2\times7$
+        
+        $19=3\times4+1\times7$
+        
+        $20=5\times4+0\times7$
+        
+        $21=0\times4+3\times7$
+    
+    \end{center}
+	\textbf{Definition 2.1: } $P(n)$ :there exist integers $i_n\ge 0$ and $j_n\ge 0$, such that $n = i_n \times 4 + j_n \times 7$.
+	
+	We have shown that $P(n)$ is true for 17 \textless n \textless 32. Assume that $P(k)$ is true. Then $k+4=i_k \times 4 +j_k \times 7+4=(i_k+1) \times 4 +j_k \times 7$, let $i_{k+1}=i_k+1$ and $j_{k+1}=j_k$, so $P(k+1)$ is true.
+	
+	Therefore, the assumption is true.
+    \end{proof}
+
+    \item
+    Suppose $a_0=1$, $a_1=2$, $a_2=3$, and $a_k=a_{k-1}+a_{k-2}+a_{k-3}$ for $k \ge 3$. Use the strong principle of mathematical induction to prove that $a_n \le 2^n$ for any integer $n\ge 0$.
+    \begin{proof}
+    ~\\
+    \begin{center}
+      When n=0, $a_0=1\le 2^{0}$.
+      
+      When n=1, $a_1=2\le 2^{1}$.
+      
+      When n=2, $a_2=2\le 2^{2}$.
+    \end{center}
+	Assume that $a_k\le 2^{k}$, then $a_{k+1}=a_k+a_{k-1}+a_{k-2}\le2^k+2^{k-1}+2^{k-2}\le2^k+2^{k-1}+2^{k-1}\le2^{k+1}$, so the assumption is true when $n=k+1$.
+	
+	Therefore, the assumption is true.
+    \end{proof}
+
+    \item
+    Prove, by mathematical induction, that
+    $$
+    (n+1)^2+(n+2)^2+(n+3)^2+\cdots +(2n)^2=\dfrac{n(2n+1)(7n+1)}{6}
+    $$
+    is true for any integer $n\ge 1$.
+    \begin{proof}
+       ~\\
+       First we can show that when $n=1$,the equation is true.
+    \begin{center}
+  		$(1+1)^2=\dfrac{1\times3\times8}{6}$
+    \end{center}   
+     \textbf{Definition 4.1: } $P(n)$: $(n+1)^2+(n+2)^2+(n+3)^2+\cdots +(2n)^2=\dfrac{n(2n+1)(7n+1)}{6}$
+     
+     Assume $P(k)$ is true, $k \ge 1$, then when $n=k+1$, the right side of the equation is $\dfrac{k(2k+1)(7k+1)}{6}+(2k+1)^2+(2k+2)^2-(k+1)^2=\dfrac{(k+1)(2(k+1)+1)(7(k+1)+1)}{6}$.
+     
+     So, the equation is true for any integer $n\ge1$.
+    \end{proof}
+
+\end{enumerate}
+
+\vspace{20pt}
+
+\textbf{Remark:} You need to include your .pdf and .tex files in your uploaded .rar or .zip file.
+
+%========================================================================
+\end{document}
