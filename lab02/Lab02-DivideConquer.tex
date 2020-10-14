@@ -1,0 +1,254 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{ctex}
+\usepackage{amsmath,amscd,amsbsy,amssymb,latexsym,url,bm,amsthm}
+\usepackage{epsfig,graphicx,subfigure}
+\usepackage{enumitem,balance}
+\usepackage{wrapfig}
+\usepackage{mathrsfs,euscript}
+\usepackage[usenames]{xcolor}
+\usepackage{hyperref}
+\usepackage[vlined,ruled,linesnumbered]{algorithm2e}
+\hypersetup{colorlinks=true,linkcolor=black}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{solution}{Solution}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\postscript}[2]
+ {\setlength{\epsfxsize}{#2\hsize}
+  \centerline{\epsfbox{#1}}}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\setlength{\oddsidemargin}{-0.365in}
+\setlength{\evensidemargin}{-0.365in}
+\setlength{\topmargin}{-0.3in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{10.1in}
+\setlength{\textwidth}{7in}
+\makeatletter \renewenvironment{proof}[1][Proof] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\makeatletter
+\renewenvironment{solution}[1][Solution] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+
+\begin{document}
+\noindent
+
+%========================================================================
+\noindent\framebox[\linewidth]{\shortstack[c]{
+\Large{\textbf{Lab02-Divide and Conquer}}\vspace{1mm}\\
+CS214-Algorithm and Complexity, Xiaofeng Gao, Spring 2019.}}
+\begin{center}
+\footnotesize{\color{red}$*$ If there is any problem, please contact TA Jiahao Fan.}
+
+% Please write down your name, student id and email.
+\footnotesize{\color{blue}$*$ Name:Lynn Xiao  \quad Student ID:\_\_\_\_\_\_\_\_\_ \quad Email: \_\_\_\_\_\_\_\_\_\_\_\_}
+\end{center}
+
+\begin{enumerate}
+    \item
+    Consider the following recurrence:
+    \begin{equation*}
+    T(n)=
+    \begin{cases}
+    \ 0 & \text{if } n=1 \\
+    \ 2T(n/2)+O(n\log{n}) & \text{if } n=2^k \text{ and } k \geq 1 \\
+    \end{cases}
+    \end{equation*}
+    \begin{enumerate}
+        \item
+        Solve $T(n)$ (in the form of $O$-notation) by recurrence tree. Detailed derivation is required.
+        \begin{solution}
+        	~\\
+            Consider the levels of recurrence tree:
+            
+            Level 1:O(nlogn)
+            
+            Level 2:2$\times O(\frac{n}{2}log\frac{n}{2})$
+            
+            So we can get at the i-th level, the computation cost is $= O(\frac{n}{2^{i-1}}log\frac{n}{2^{i-1}})=O(n(logn-i+1))$.
+            
+            Notice that $(k+1)-th$ level are all leaf nodes, so we have $2^k=n$ and the depth of the recurrence tree is $logn$.
+            
+            So the total computation cost is $\sum_{i=1}^{k+1}n(logn-i+1)=\sum_{i=0}^{k}n(logn-i)=\sum_{i=0}^{logn}n(logn-i)=O(n(logn)^2)$.
+            
+        \end{solution}
+
+        \item
+        Can we use the Master Theorem to solve this recurrence? Please explain your answer.
+        \begin{solution}
+            ~\\
+            The recurrence relation is $2T(\frac{n}{2})+O(nlogn)$. We notice that the merging cost is $O(nlogn)$ does not match the form of Master Theorem.
+            
+            Master Theorem has a promotion form:
+            
+            Assume the recurrence relationship is $T(n)=aT(\frac{n}{b})+f(n)$, then
+            
+            (i) If $f(n)=O(n^{log_ba-\epsilon}), $ $\epsilon\textgreater0,$ then $T(n)=\Theta(n^{log_ba}))$.
+            
+            (ii) If $f(n)=\Theta(n^{log_ba})$, then $T(n)=\Theta(n^{log_ba}logn)$
+            
+            (iii)If $f(n)=\Omega({n^{log_ba+\epsilon}})$ and $\epsilon\textgreater0$, and for a constant $c$ and $n$ which can be sufficiently large, we have $af(\frac{n}{b})\le cf(n)$, then $T(n)=\Theta(f(n))$.
+            
+            In our case, $nlog_ba=n^1$ and $f(n)=nlogn$, it is clear that it does not satisfy the second case in our theorem. And we also can not find a $\epsilon\textgreater0$ so that $nlogn=O(n^{1-\epsilon})$ or $nlogn=\Omega(n^{1-\epsilon})$, so we can not use the Master Theorem to solve this recurrence.
+            
+            
+        \end{solution}
+
+    \end{enumerate}
+
+    \item
+    Given any array $num$, find the number of pairs $(i, j)$ satisfying $i < j$ and $num[i] > 2 \times num[j]$. For example, if $num=[1,3,2,3,1]$, the answer should be 2.
+    \begin{enumerate}
+        \item
+         Design an algorithm to solve this problem using divide-and-conquer strategy and complete the implementation in the provided C/C++ source code. {\color{blue}(The source code \emph{Code-Pairs.cpp} is attached on the course webpage.)}
+
+        \item
+        Write a recurrence for the running time of your algorithm and solve it using the Master Theorem directly.
+        \begin{solution}
+        	~\\
+        (a)	
+        
+        We can easily come up with an algorithm of exhaustive search traversing all $C_n^2$ pairs to check if each satisfies the requirements.
+        
+        A possible algorithm of exhaustive searching is shown in Alg.1.
+        
+        
+        \begin{minipage}[t]{0.8\textwidth}
+		\begin{algorithm}[H]
+			\KwIn{An array $A[1,\cdots,n]$}
+			\KwOut{Number of inversing pairs in A}
+			\BlankLine
+			\caption{ExhaustiveSearch}
+			\label{Alg-selectionsort}
+			\BlankLine
+			$i\leftarrow 1$\;
+			$N\leftarrow0$\;
+			\For{$i\leftarrow 1$ \textbf{to} $n-1$}{
+				$max\leftarrow A[i];pos\leftarrow i$\;
+				\For{$j\leftarrow i+1$ \textbf{to} $n$}{
+					\If{$A[i] > 2\times A[j]$}{
+						$N\leftarrow N+1$\;
+					
+					}
+					
+				}
+			\Return N\;
+			}
+			
+		\end{algorithm}
+		\end{minipage}
+	
+	It is clear that the time complexity of this algorithm is $O(n^2)$.
+	
+	To reduce the time complexity, we can come up with an algorithm with divide-and-conquer design. We divide the array into two parts. We first calculate the inversion pairs within each half, and then consider the inversion pairs between two parts. The algorithm is shown in Alg.2.
+	
+	 \begin{minipage}[t]{0.9\textwidth}
+		\begin{algorithm}[H]
+			\KwIn{An array $A[1,\cdots,n]$, starting point L, ending point R}
+			\KwOut{Number of inversing pairs in A}
+			\BlankLine
+			\caption{Divide-And-Conquer1}
+			\label{Alg-selectionsort}
+			\BlankLine
+			\If{$L=R$}{\Return 0}
+			$M\leftarrow\frac{L+R}{2}$\;
+			$N\leftarrow$Divide-And-Conque1(arrwy,L,M)+Divide-And-Conque1(array,M,R)\;
+		
+			\For{$i\leftarrow 1$ \textbf{to} $M$}{
+			
+				\For{$j\leftarrow M+1$ \textbf{to} $R$}{
+					\If{$A[i] > 2\times A[j]$}{
+						$N\leftarrow N+1$\;
+						
+					}
+					
+				}
+			\Return N;
+			}
+			
+		\end{algorithm}
+	\end{minipage}
+	However, according to the Master Theorem, the time complexity of Alg.2 is still $O(n^2)$. Because the merging part is still exhaustive search, which traverse all pairs between the two parts.
+	
+	We can derive a new algorithm as is shown in Alg.3.
+	
+	 \begin{minipage}[t]{0.9\textwidth}
+		\begin{algorithm}[H]
+			\KwIn{An array $A[1,\cdots,n]$, starting point L, ending point R}
+			\KwOut{Number of inversing pairs in A}
+			\BlankLine
+			\caption{Divide-And-Conquer2}
+			\label{Alg-selectionsort}
+			\BlankLine
+			\If{$L=R$}{\Return 0}
+			$M\leftarrow\frac{L+R}{2}$\;
+			$N\leftarrow$Divide-And-Conque1(arrwy,L,M)+Divide-And-Conque1(array,M,R)\;
+			
+			{
+				
+				\For{$j\leftarrow M+1$ \textbf{to} $R$}{
+				\While{$A[i]\le2\times A[j]$ \textbf{and} $i\le M$}{$i\leftarrow i+1$}
+				$N\leftarrow N+(M-i+1)$	
+				}
+			
+				\Return N;
+			}
+			
+		\end{algorithm}
+	\end{minipage}
+		The time complexity of Alg.3 is $O(n)$ according to the Master Algorithm.
+		
+		(b)
+		
+		The following recurrence relation can be derived from the above pseudo code:
+		\begin{center}
+			$$T(n)=
+			\begin{cases}
+			0&  n=1\\
+			2T(\frac{n}{2})+O(n)& \text{otherwise}
+			\end{cases}$$
+		\end{center}
+	
+		According to Main Theorem, the complexity of this algorithm is $O(nlogn)$.
+        \end{solution}
+    \end{enumerate}
+	
+    \item
+    \textbf{Transposition Sorting Network}: A comparison network is a \textbf{transposition network}  if each comparator connects adjacent lines, as in the network in Fig.~\ref{Fig-Transposition}.
+
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.5\textwidth]{Fig-Transposition.pdf}
+        \caption{A Transposition Network Example}\label{Fig-Transposition}
+    \end{figure}
+    
+    \begin{enumerate}
+        \item
+        Prove that a transposition network with $n$ inputs is a sorting network if and only if it sorts the sequence $\langle n, n-1, \cdots, 1 \rangle$. {\color{blue}(Hint: Use an induction argument analogous to the \emph{Domain Conversion Lemma}.)}
+        \begin{proof}
+			The descending sequence has the largest number of inversion pairs, $Num_i=C_n^2$. And each comparator can cut down $Num_i$ by one. So according to the Fig 1, transposition network with $n$ lines has $C_n^2$ comparators, which can make $Num_i$ be zero.
+			
+			So a transposition network with $n$ inputs is a sorting network if and only if it sorts the sequence $\langle n,n-1,...,1\rangle$. Otherwise, the number of inversion pairs of the sequence can not be zero so that the output will not be in order.
+        \end{proof}
+
+        \item
+        {\color{red}{(Bonus)}} Given any $n \in \mathbb{N}$, write a program using Tkinter in Python to draw a figure similar to Fig.~\ref{Fig-Transposition} with $n$ input wires.
+        
+    \end{enumerate}
+
+\end{enumerate}
+
+\vspace{20pt}
+
+\textbf{Remark:} include your .cpp, .py, .pdf and .tex files in your uploaded .rar or .zip file.
+
+%========================================================================
+\end{document}
