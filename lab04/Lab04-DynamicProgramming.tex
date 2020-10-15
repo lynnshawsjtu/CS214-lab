@@ -1,0 +1,209 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{ctex}
+\usepackage{amsmath,amscd,amsbsy,amssymb,latexsym,url,bm,amsthm}
+\usepackage{epsfig,graphicx,subfigure}
+\usepackage{enumitem,balance}
+\usepackage{wrapfig}
+\usepackage{mathrsfs,euscript}
+\usepackage[usenames]{xcolor}
+\usepackage{hyperref}
+\usepackage[vlined,ruled,linesnumbered]{algorithm2e}
+\hypersetup{colorlinks=true,linkcolor=black}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{solution}{Solution}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\postscript}[2]
+ {\setlength{\epsfxsize}{#2\hsize}
+  \centerline{\epsfbox{#1}}}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\setlength{\oddsidemargin}{-0.365in}
+\setlength{\evensidemargin}{-0.365in}
+\setlength{\topmargin}{-0.3in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{10.1in}
+\setlength{\textwidth}{7in}
+\makeatletter \renewenvironment{proof}[1][Proof] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\makeatletter
+\renewenvironment{solution}[1][Solution] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+
+\begin{document}
+\noindent
+
+%========================================================================
+\noindent\framebox[\linewidth]{\shortstack[c]{
+\Large{\textbf{Lab04-Dynamic Programming}}\vspace{1mm}\\
+CS214-Algorithm and Complexity, Xiaofeng Gao, Spring 2019.}}
+\begin{center}
+\footnotesize{\color{red}$*$ If there is any problem, please contact TA Jiahao Fan.}
+
+% Please write down your name, student id and email.
+\footnotesize{\color{blue}$*$ Name:Lynn Xiao  \quad Student ID:\_\_\_\_\_\_\_\_\_ \quad Email: \_\_\_\_\_\_\_\_\_\_\_\_}
+\end{center}
+
+\begin{enumerate}
+    \item
+    Given a positive integer $n$, find the least number of perfect square numbers (e.g., 1, 4, 9, \dots) which sum to $n$.
+    \begin{enumerate}
+        \item
+        Assume that $\text{OPT}(a)$ = the least number of perfect square numbers which sum to $a$. Please write a recurrence for $\text{OPT}(a)$.
+		\begin{solution}
+			~\\
+			$$ OPT(a)=\left\{
+			\begin{array}{lcl}
+			0       &      & {a      =      0}\\
+		\min_{1\le b\le\sqrt{a}} \{1+OPT(a-b^2)\}     &      & {otherwise}
+			\end{array} \right. $$
+		\end{solution}
+        \item
+        Base on the recurrence, write down your algorithm in the form of \emph{pseudo code}.
+        
+        \begin{solution}
+        	~\\
+        \begin{minipage}[t]{0.9\textwidth}
+        	\begin{algorithm}[H]
+        		\KwIn{An integer n}
+        		\KwOut{The least number of perfect square numbers $M[n]$}
+        		\BlankLine
+        		\caption{Tabulation}
+        		\label{Alg-selectionsort}
+        		\BlankLine
+        		$M[0]\leftarrow1$\;
+        		\For{$i\leftarrow 1$ \textbf{to} $n$}{
+        			$M[i]\leftarrow1$\;
+        			\For{$j\leftarrow2 $ \textbf{to} $\sqrt{i}$}{
+        			$M[i]=min\{M[i],1+M[j-i^2]\}$
+        			}
+        		\Return $M[n]$
+        		}
+        		
+        	\end{algorithm}
+        \end{minipage}
+        \end{solution}
+    \end{enumerate}
+
+    \item
+    Given an input string $s$ (could be empty, and contains only lowercase letters a-z) and a pattern $p$ (could be empty, and contains only lowercase letters a-z and characters like '?' or '*'), please design an algorithm using dynamic programming to determine whether $s$ matches $p$ based on the following rules:
+    \begin{itemize}
+        \item
+        '?' matches any single character.
+        \item
+        '*' matches any sequence of characters (including the empty sequence).
+        \item
+        The matching should cover the entire input string (not partial).
+    \end{itemize}
+    Assume $m=len(s)$ and $n=len(p)$. Output \textbf{true} if $s$ matches $p$, or \textbf{false} otherwise.
+    \begin{enumerate}
+        \item
+        Assume that $\text{ANS}(i, j)$ means whether the first $i$ ($0 \leq i \leq m$) characters of $s$ match the first $j$ ($0 \leq j \leq n$) characters of $p$. Please write a recurrence for $\text{ANS}(i, j)$.
+		\begin{solution}
+				~\\
+			$$ ANS(i,j)=\left\{
+			\begin{array}{lcl}
+			true       &      & {i=0,j=0}\\
+		false       &      & {i=0,j=0,p[j]\neq'*'}\\
+		ANS(i,j-1)       &      & {i=0,j=0,p[j]='*'}\\
+		
+		false       &      & {i\neq0,j=0}\\
+		false       &      & {s[i]\neq p[j] \quad \textbf{and}\quad p[j]\neq'?'\quad \textbf{and}\quad p[j]\neq'*'}\\
+		ANS(i-1,j-1)       &      & {s[i]= p[j] \quad \textbf{or}\quad p[j]='?'}\\
+			ANS(i,j-1) \cup ANS(i-1,j)     &      & { p[j]='*'}\\
+			\end{array} \right. $$
+		\end{solution}
+        \item
+        Base on the recurrence, write down your algorithm in the form of \emph{pseudo code}.
+		\begin{solution}
+			~\\
+			 \begin{minipage}[t]{0.9\textwidth}
+				\begin{algorithm}[H]
+					\KwIn{Two string $s$ and $p$,the length of the string $m=len(s)$, $n=len(p)$}
+					\KwOut{whether $s$ matchs $q$: ANS[m][n] }
+					\BlankLine
+					\caption{Tabulation}
+					\label{Alg-selectionsort}
+					\BlankLine
+					$ANS[0][0]\leftarrow true$\;
+					\For{$i\leftarrow 1$ \textbf{to} $m$}{
+						$ANS[i][0]\leftarrow false$
+						}
+					\For{$i\leftarrow 0$ \textbf{to} $m$}{
+						\For{$j\leftarrow1$ \textbf{to} $n$}{
+							\If{i=0}{
+								\If{$p[j]='*'$}{
+									$ANS[i][j]
+									\leftarrow ANS[i][j-1]$
+								}
+								\textbf{else} $ANS[i][j]\leftarrow false$
+							}
+						\textbf {else} \If{$s[i]=p[j]$ \textbf{or} $p[j]='?'$ }{$ANS[i][j]\leftarrow ANS[i-1][j-1]$} 
+							\textbf {else}
+						\If {$p[j]='*'$}{
+							$ANS[i][j]\leftarrow \max\{ANS[i-1][j],ANS[i][j-1]\}$
+							
+							\textbf {else}
+							{
+								$A[i][j]\leftarrow false$
+							}
+						}
+						}
+					
+					}
+						\Return $ANS[m][n]$
+					
+					
+				\end{algorithm}
+			\end{minipage}
+		\end{solution}
+        \item
+        Analyze the time and space complexity of your algorithm.
+        
+        \begin{solution}
+        ~\\
+        (i) Time complexity: We need $O(1)$ time to compute each $A[i][j]$, so the total time complexity is $O(mn)$.
+        
+        (ii) Space complexity: We use a two-dimensional array to store the result, so the space complexity is $O(mn)$.
+        \end{solution}
+    \end{enumerate}
+
+    \item
+    Recall the \emph{String Similarity} problem in class, in which we calculate the edit distance between two strings in a sequence alignment manner.
+    \begin{enumerate}
+        \item
+        Implement the algorithm combining dynamic programming and divide-and-conquer strategy in C/C++ with time complexity $O(mn)$ and space complexity $O(m+n)$. {\color{blue}(The template \emph{Code-SequenceAlignment.cpp} is attached on the course webpage)}.
+        
+        \item
+        Given $\alpha(x, y) = |ascii(x) - acsii(y)|$, where $ascii(c)$ is the ASCII code of character $c$, and $\delta=13$. Find the edit distance between the following two strings.
+        \begin{align*}
+        X[1..60]=&\ PSQAKADIETSJPWUOMZLNLOMOZNLTLQ\\
+        &\ CFQHZZRIQOQCOCFPRWOUXXCEMYSWUJ
+        \end{align*}
+        \begin{align*}
+        Y[1..50]=&\ SUYLVMUSDROFBXUDCOHAAEBKN\\
+        &\ AAPNXEVWNLMYUQRPEOCQOCIMZ
+        \end{align*}
+        \begin{solution}
+        	~\\
+        	By running the code we can get the distance is 439.
+        \end{solution}
+        \item
+        {\color{red}{(Bonus)}} Visualize the shortest path found in (b) on the corresponding edit distance graph using any tools you like.
+    \end{enumerate}
+\end{enumerate}
+
+\vspace{20pt}
+
+\textbf{Remark:} You need to include your .cpp, .pdf and .tex files in your uploaded .rar or .zip file.
+
+%========================================================================
+\end{document}
