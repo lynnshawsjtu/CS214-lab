@@ -1,0 +1,142 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{ctex}
+\usepackage{amsmath,amscd,amsbsy,amssymb,latexsym,url,bm,amsthm}
+\usepackage{epsfig,graphicx,subfigure}
+\usepackage{enumitem,balance}
+\usepackage{wrapfig}
+\usepackage{mathrsfs,euscript}
+\usepackage[usenames]{xcolor}
+\usepackage{hyperref}
+\usepackage[vlined,ruled,linesnumbered]{algorithm2e}
+\hypersetup{colorlinks=true,linkcolor=black}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{solution}{Solution}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\postscript}[2]
+ {\setlength{\epsfxsize}{#2\hsize}
+  \centerline{\epsfbox{#1}}}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\setlength{\oddsidemargin}{-0.365in}
+\setlength{\evensidemargin}{-0.365in}
+\setlength{\topmargin}{-0.3in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{10.1in}
+\setlength{\textwidth}{7in}
+\makeatletter \renewenvironment{proof}[1][Proof] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\makeatletter
+\renewenvironment{solution}[1][Solution] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+
+\begin{document}
+\noindent
+
+%========================================================================
+\noindent\framebox[\linewidth]{\shortstack[c]{
+\Large{\textbf{Lab06-Graph Exploration}}\vspace{1mm}\\
+CS214-Algorithm and Complexity, Xiaofeng Gao, Spring 2019.}}
+
+
+\begin{center}
+\footnotesize{\color{red}$*$ If there is any problem, please contact TA Mingran Peng.}\par
+% Please write down your name, student id and email.
+\footnotesize{\color{blue}$*$ Name:Lynn Xiao \quad Student ID:\_\_\_\_\_\_\_\_\_ \quad Email: \_\_\_\_\_\_\_\_\_\_\_\_}
+\end{center}
+\begin{enumerate}
+    
+    \item
+    Given a graph, find the number of Strongly Connected Components in the graph.
+    \begin{enumerate}
+        \item
+         Complete the implementation in the provided C/C++ source code. Notice that in the source code there will be more detailed explanation.{\color{blue}(The source code \emph{SCC.cpp} is attached on the course webpage.)}\par
+       \item
+        Use the $Gephi$ to draw the graph. If you think the data provided is not beautiful, you can generate your own data. Notice that result of $Gephi$ will be taken into consideration of Best Lab.\par 
+        
+    \end{enumerate}
+%    \begin{proof}
+%        Uncomment this block to write your proof.
+%    \end{proof}
+
+
+\item
+    Remember the lemma introduced in the course: : $\forall u, v \in V$, intervals $[PRE(u), POST(u)]$, $[PRE(v), POST(v)]$ are either disjoint or one is contained within the other.\par
+Prove the lemma.\par
+    \begin{proof}
+       ~\\
+       If $(u,v)\notin$ E, we can easily know that intervals $[PRE(u),POST(u)]$ and $[PRE(v),POST(v)]$ are disjoint.
+       
+       If $(u,v)\in$ E, assume that we first visit $v$.
+       
+       If $u$ is not visited before, then $PRE(u)\textgreater PRE(v)$ and $POST(v)\textgreater PRE(u)$ since we call $EXPLORE(G,u)$ in $EXPLORE(G,v)$. So $[PRE(u),POST(u)]$ is contained  within    
+       
+       $[PRE(v),POST(v)]$.
+       
+       We can get the same conclusion when $u$ is visited first. So the lemma is proved.
+    \end{proof}
+\item
+Consider there is a network consists $n$ computers. For some pairs of computers, a wire exists in the pair, which means these two computers can communicate with delay $t$.\par
+Assume that computer $s$ wants to issue a message to computer $t$, we want to know the minimum time needed to send this message.\par
+You need to provide the pseudo code and analyze the time complexity.\par
+
+    \begin{proof}
+       ~\\
+       We can use BFS to solve this problem, which is shown in Alg.1.
+       
+        \begin{minipage}[t]{0.9\textwidth}
+       	\begin{algorithm}[H]
+       		\KwIn{Numbers of computers $n$, computer $s$ and $t$, Graph $G(V,E)$, delay time $T$}
+       		\KwOut{The minimum time needed to send message from computer $s$ to $t$ }
+       		\BlankLine
+       		\caption{Calculate least delay by BFS}
+       		\label{Alg-selectionsort}
+       		\BlankLine
+       		\For{$u\in v$}{$DIST(u)\leftarrow\infty$}
+       		
+       		$DIST(s)\leftarrow0$
+       		
+       		$Q\leftarrow[s]$ ($Q$ is a queue)
+       		
+       		\While{$Q$ is not empty}{
+       			$u=EJECT(Q)$
+       			
+       			\For{$(u,v)\in E$}{
+       				\If{$DIST(v)=\infty$}{
+       				$INJECT(Q,v)$
+       				
+       				$DIST(v)\leftarrow DIST(u)+1$
+       				\If{$v$=$t$}{\Return $T\times DIST(v)$}
+       			}
+       			
+       		}
+       		}
+       	\end{algorithm}
+       
+       Time complexity:
+       
+       (i) Best case: $O(1)$, if $(s,t)\in E$.
+       
+       (ii) Worst case: $O(|V|+|E|)$, if every edge is visited.
+       \end{minipage}
+   \end{proof}
+
+
+    
+
+\end{enumerate}
+
+\vspace{20pt}
+
+\textbf{Remark:} You need to include your .pdf and .tex files in your uploaded .rar or .zip file.
+
+%========================================================================
+\end{document}
