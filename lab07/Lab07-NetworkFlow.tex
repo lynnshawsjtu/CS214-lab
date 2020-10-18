@@ -1,0 +1,161 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{ctex}
+\usepackage{amsmath,amscd,amsbsy,amssymb,latexsym,url,bm,amsthm}
+\usepackage{epsfig,graphicx,subfigure}
+\usepackage{enumitem,balance}
+\usepackage{wrapfig}
+\usepackage{mathrsfs,euscript}
+\usepackage[usenames]{xcolor}
+\usepackage{hyperref}
+\usepackage[vlined,ruled,linesnumbered]{algorithm2e}
+\hypersetup{colorlinks=true,linkcolor=black}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{solution}{Solution}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\postscript}[2]
+ {\setlength{\epsfxsize}{#2\hsize}
+  \centerline{\epsfbox{#1}}}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\setlength{\oddsidemargin}{-0.365in}
+\setlength{\evensidemargin}{-0.365in}
+\setlength{\topmargin}{-0.3in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{10.1in}
+\setlength{\textwidth}{7in}
+\makeatletter \renewenvironment{proof}[1][Proof] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\makeatletter
+\renewenvironment{solution}[1][Solution] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+
+\begin{document}
+\noindent
+
+%========================================================================
+\noindent\framebox[\linewidth]{\shortstack[c]{
+\Large{\textbf{Lab07-Network Flow}}\vspace{1mm}\\
+CS214-Algorithm and Complexity, Xiaofeng Gao, Spring 2019.}}
+
+
+\begin{center}
+\footnotesize{\color{red}$*$ If there is any problem, please contact TA Mingran Peng.}\par
+% Please write down your name, student id and email.
+\footnotesize{\color{blue}$*$ Name:Lynn Xiao Student ID: \quad Email: }
+\end{center}
+\begin{enumerate}
+    
+    \item
+    Remember the network problems in last lab?\par
+    Consider there is a network consists $n$ computers. For some pairs of computers, a wire $i$ exists in the pair, which means these two computers can communicate with delay $t_i$.\par
+The distance of two computers are defined as their communication delay. Design an algorithm to compute the maximum distance in the network.\par
+You need to provide the pseudo code and analyze the time complexity.\par
+\begin{solution}
+	~\\
+	
+	 	\begin{algorithm}[H]
+		\KwIn{ Graph $G(V,E)$ (computer$\in V$ and wire$\in E$), the number of the computer $n$}
+		\KwOut{The maximum distance in the network}
+		\BlankLine
+		\caption{Maximum Distance Algorithm}
+		\label{Alg-selectionsort}
+		\BlankLine
+		\For{$i\leftarrow1$ \textbf{to} $n$}{
+		\For{$j\leftarrow1$ \textbf{to} $n$}
+		{
+			\If{wire $w$ connects $i$, $j$}{$c_{ij}=t_w$}
+			\textbf{else} {$c_{ij}=\infty$}
+		}
+		\For{$k\leftarrow1$ \textbf{to} $n$}{
+			\For{$i\leftarrow1$ \textbf{to} $n$}
+			{
+				\For{$j\leftarrow1$ \textbf{to} $n$}
+				{
+					$c_{ij}=\max\{c_{ik}+c_{kj}\}$
+				}
+			}
+		}
+		\Return{max value of the matrix $C$}
+	}
+	\end{algorithm}
+	
+	This algorithm uses Floyd algorithm to compute the distance of each pair of computers. The time complexity of the Floyd algorithm is $O(n^3)$ and finding the maximum value is $O(n^2)$. So the time complexity of the algorithm is $O(n^3)$.
+\end{solution}
+
+
+\item
+   Suppose you are traveling through a country defined as a directed graph $G=(V,E)$. You start from vertex $s$ and want to go to $e$. For each $i\in E$, there is a $w_i$ regarding the cost for traveling via $i$. Some times $w_i<0$ which means you can earn money by traveling.(Do not ask why.) Here you need to design an algorithm satisfying the following demands:\par
+   \begin{enumerate}
+   \item Find the minimum cost from $s$ to $e$. The problem guarantee that there is a path from $s$ to $e$.\par
+   \item Indicate whether there is a circle in $G$, that by traveling through this circle you can earn money continually.\par
+   \end{enumerate}
+   You need to provide the pseudo code and analyze the time complexity.\par
+
+\begin{solution}
+~\\
+	\begin{algorithm}[H]
+	\KwIn{ Graph $G(V,E)$, number of vertices $s$ and number of edges $e$}
+	\KwOut{Whether there is a negative circle and the minmum cost from $s$ to $e$}
+	\BlankLine
+	\caption{Minimum Traveling Cost Algorithm}
+	\label{Alg-selectionsort}
+	\BlankLine
+	\For {node $u\in v$}{
+		$M[0,u]=\infty$
+	}
+	$M[0,s]=0$
+	
+	\For{$i\leftarrow1$ \textbf{to} $n$}{
+		\For {node $u\in v$}{
+			\If{$M[e]$ has been updated in previous iteration}{
+				\For{$edge(e,v)\in E$}{
+					$M[i,e]=\min\{M[i-1,e],M[i-1,v]+w(e,v)\}$
+				}
+			}
+		}
+	}
+	\If{$M[n,u]=M[n-1,u]$ for all $u\in v$}{
+	\Return{$M[n,e]$}}
+	
+\textbf{else} {There is a negative circle in $G$.}
+	
+
+\end{algorithm}
+\end{solution}
+\item
+
+\color{red}(Bonus)\color{black}
+Suppose you are a staff of SJTU who is in charge of arranging lessons. Suppose you have $n$ time slots, $n$ lessons and $n$ professors. Clearly, you should assign exactly one time slot and one lesson to every professor. A lesson or a time slot should be assigned to exactly one professor. \par
+For each professor, he will prefer some certain time slots among these $n$ time slots, and prefer to taught some certain lessons among these $n$ lessons.\par
+A professor will be satisfied iff you arrange him both his preferred lesson and preferred time slot. Your goal is to satisfy as many professors as you can. Design an algorithm to output how many professors can you satisfy at most.\par 
+Notice that this problem is really hard, even draft idea is welcomed.\par
+\color{blue} (Hint: Treat time slots, lessons, professors as nodes. Construct edges according to professors' preference. Use network flow algorithm to solve it. )
+\color{black}
+\begin{solution}
+	~\\
+	We can construct a graph with $n$ time slot nodes, $n$ lesson nodes, $n$ pre-professor nodes and $n$ post-professor nodes. In the graph, directed edges of capacity 1 are used to connect them.
+	
+	For the time slots and lessons that a professor prefers, we connect the time slot node to pre-professor node and post-professor node to lesson node. Also, pre-professor node is connected to the corresponding post-professor node. A source node connects to all time slot nodes. All lesson nodes connect to a target node. 
+	
+	Then to compute how many professors are satisfied, we only need to compute the max flow of the graph. So we can use Ford-Fulkerson algorithm with the time complexity $O(mn)$.
+\end{solution}
+
+    
+
+\end{enumerate}
+
+\vspace{20pt}
+
+\textbf{Remark:} You need to include your .pdf and .tex files in your uploaded .rar or .zip file.
+
+%========================================================================
+\end{document}
