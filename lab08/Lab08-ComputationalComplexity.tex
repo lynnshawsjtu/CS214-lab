@@ -1,0 +1,172 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{ctex}
+\usepackage{amsmath,amscd,amsbsy,amssymb,latexsym,url,bm,amsthm}
+\usepackage{epsfig,graphicx,subfigure}
+\usepackage{enumitem,balance}
+\usepackage{wrapfig}
+\usepackage{mathrsfs,euscript}
+\usepackage[usenames]{xcolor}
+\usepackage{hyperref}
+\usepackage[vlined,ruled,linesnumbered]{algorithm2e}
+\usepackage{array}
+\hypersetup{colorlinks=true,linkcolor=black}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{solution}{Solution}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\postscript}[2]
+ {\setlength{\epsfxsize}{#2\hsize}
+  \centerline{\epsfbox{#1}}}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\setlength{\oddsidemargin}{-0.365in}
+\setlength{\evensidemargin}{-0.365in}
+\setlength{\topmargin}{-0.3in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{10.1in}
+\setlength{\textwidth}{7in}
+\makeatletter \renewenvironment{proof}[1][Proof] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\makeatletter
+\renewenvironment{solution}[1][Solution] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+
+\begin{document}
+\noindent
+
+%========================================================================
+\noindent\framebox[\linewidth]{\shortstack[c]{
+\Large{\textbf{Lab08-Computational Complexity}}\vspace{1mm}\\
+CS214-Algorithm and Complexity, Xiaofeng Gao, Spring 2019.}}
+\begin{center}
+\footnotesize{\color{red}$*$ If there is any problem, please contact TA Jiahao Fan or TA Mingran Peng.}
+
+% Please write down your name, student id and email.
+\footnotesize{\color{blue}$*$ Name:Lynn Xiao  \quad Student ID:\_\_\_\_\_\_\_\_\_ \quad Email: \_\_\_\_\_\_\_\_\_\_\_\_}
+\end{center}
+
+\begin{enumerate}
+    \item
+    Design a one-tape TM $M$ that computes the function $f(x, y) = x - y$, where $x$ and $y$ are positive integers ($x > y$). The alphabet is $\{1, 0, \Box, \triangleright, \triangleleft\}$, and the inputs are $x$ 1's, $\Box$ and $y$ 1's. Below is the initial configuration for input $x=7$ and $y=3$. The result $z=f(x, y)$ should also be represented in the form of $z$ 1's on the tape with the pattern of $\triangleright 111 \cdots 111 \triangleleft$.
+
+    \begin{center}
+    \begin{tabular}{ll|c|c|c|c|c|c|c|c|c|c|c|c|c|c}
+    	\cline{2-16}
+    	Init:& & $\triangleright$ &  1  & 1 & 1 & 1 & 1 & 1 & 1 & $\Box$ & 1 & 1 & 1 & $ \triangleleft$ & \\
+    	\cline{2-16}
+    	\multicolumn{2}{c}{} & \multicolumn{1}{c}{$\uparrow$} & \multicolumn{11}{c}{}\\
+    	\multicolumn{2}{c}{} & \multicolumn{1}{c}{$q_S$} & \multicolumn{11}{c}{}\\
+    \end{tabular}
+    \end{center}
+
+    \begin{enumerate}
+        \item
+        Please describe your design and then write the specifications of $M$ in the form like $\langle q_S, \triangleright \rangle \rightarrow \langle q_1, \triangleright,  R\rangle$. Explain the transition functions in detail.
+
+        \item
+        Please draw the state transition diagram using Microsoft Visio.
+
+        \item
+        Show briefly and clearly the whole process from initial to final configurations for input $x = 7$ and $y = 3$.
+    \end{enumerate}
+
+    \item
+    What is the ``certificate'' and ``certifier'' for the following problems?
+    \begin{enumerate}
+        \item
+        \emph{PARTITION}: Given a finite set $A$ and a size $s(a) \in \mathbb{Z}$ for each $a \in A$, is there a subset $A' \subseteq A$ such that $\sum_{a \in A'}s(a) = \sum_{a \in A-A'}s(a)$ ?
+
+        \item
+        \emph{CLIQUE}: Given a graph $G = (V, E)$ and a positive integer $K \leq |V|$, is there a subset $V' \subseteq V$ with $|V'| \geq K$ such that every two vertices in $V'$ are joined by an edge in $E$ ?
+
+        \item
+        \emph{ZERO-ONE INTEGER PROGRAMMING}: Given an integer $m \times n$ matrix $A$ and an integer $m$-vector $b$, is there an integer $n$-vector $x$ with elements in the set $\{0, 1\}$ such that $Ax \leq b$ ?
+    \end{enumerate}
+	\begin{solution}
+		~\\
+		(a) certificate: a partition of set A.  
+		
+		certifier: compute the some of each part and check if they are the same.
+		
+		(b) certificate: a subset of $V$
+		
+		certifier: check if the subset contains at least $k$ elements and there is an edge between each pair of the nodes in the subset.
+		
+		(c) certificate: an assignment of {0,1} to n-vector x
+		
+		certifier: compute $Ax$ and check if each element of it is smaller than the corresponding element in $b$.
+	\end{solution}
+    \item
+    \emph{SUBSET SUM}: Given a finite set $A$, a size $s(a) \in \mathbb{Z}$ for each $a \in A$ and an integer $B$, is there a subset $A' \subseteq A$ such that $\sum_{a \in A'}s(a) = B$?
+
+    \emph{KNAPSACK}: Given a finite set $A$, a size $s(a) \in \mathbb{Z}$ and a value $v(a) \in \mathbb{Z}$ for each $a \in A$ and integers $B$ and $K$, is there a subset $A' \subseteq A$ such that $\sum_{a \in A'}s(a) \leq B$ and $\sum_{a \in A'}v(a) \geq K$?
+
+    \begin{enumerate}
+    \item
+    Prove \emph{PARTITION} $\leq_p$ \emph{SUBSET SUM}.
+	\begin{proof}
+		~\\
+		Instance of PARTITION: A finite set $A$ and a size $s(a)\in\mathbb{Z}$, there is a subset $A' \subseteq A$ that satisfies  $\sum_{a \in A'}s(a) = \sum_{a \in A-A'}s(a)$.
+		
+		Instance of SUBSETSUM: The same set $A$ with the instance of PARTITION and let B be the half of the sum of the elements in $A$.
+		
+		If $A'$ satisfies the requirement of the instance of PARTITION, we can easily know that it also satisfies the requirement of the instance of SUBSETSUM and vice versa.
+	\end{proof}
+    \item
+    Prove \emph{SUBSET SUM} $\leq_p$ \emph{KNAPSACK}.
+	\begin{proof}
+		~\\
+		Instance of PARTITION: A finite set $A$ and a size $s(a)\in\mathbb{Z}$ for each $a\in A$ and an integer B. A subset $A' \subseteq A$ such that $\sum_{a \in A'}s(a) = B$.
+		
+		Instance of KNAPSACK: The same set with set in the instance of PARTITION, and the same integer B. Let value of every element in A be 1 and $K=B$.
+		
+			If $A'$ satisfies the requirement of the instance of SUBSETSUM, we can easily know that it also satisfies the requirement of the instance of KNAPSACK and vice versa.
+	\end{proof}
+    \end{enumerate}
+
+    \item
+    \emph{3-SAT}: Given a set $U$ of variables, a collection $C$ of clauses over $U$ such that each clause $c \in  C$ has $|c| = 3$, is there a satisfying truth assignment for $C$?
+
+    Prove \emph{3-SAT} $\leq_p$ \emph{CLIQUE}.
+	\begin{proof}
+		~\\
+		Given an instance of 3-SAT, we construct an instance$(G,k)$ that has a subset equal or larger than $k$.
+		
+		G contains 6 vertices for each clause, one for each literal. Initially, each pair of vertices is connected. Then we only remain on vertex between different clause. Also, the connection between $x_k$ and $\bar x_k$
+		in the same clause.
+		
+		If we can find a subset of size $k$ in $G$ satisfies the requirement of CLIQUE, the we can assign true to each element in the subset so that $\phi$ is true which satisfies 3-SAT. Also we can prove this statement vice versa.
+		
+	
+	\end{proof}
+
+\item Algorithm class is a democratic class. Denote class as a finite set $S$ containing every students. Now students decided to raise a student union $S' \subseteq S$ with $|S'|\leq K$ .\par
+As for the members of the union, there are many different opinions. An opinion is a set $S_o\subseteq S$. Note that number of opinions has nothing to do with number of students.\par
+The question is whether there exists such student union $S' \subseteq S$ with $|S'|\leq K$, that $S'$ contains at least one element from each opinion. We call this problem \emph{ELECTION} problem, prove that it is NP-complete.
+
+\begin{proof}
+~\\
+Given all opinions and a student union $S' \subseteq S$, we can check if $S'$ contains at least one element from each opinion one by one. So we can certificate it in polynomial time and prove it's a NP problem.
+
+From the course we know that $3-SAT$ is a NP-complete problem and $3-SAT\le_pVERTEX-COVER$. Therefore $VERTEX-COVER$ is a NP-complete problem.
+
+We claim that \emph{VERTEX-COVER} problem can reduce to \emph{ELECTION} problem. Given an arbitrary graph, let each vertex be a student and each edge be an opinion. Two corresponding vertices of the edge is the elements of the opinion.
+
+To check if there is a subset whose size is equal or smaller than $k$ that covers all edges, we only have to check if there is a student union whose size is equal or smaller than $k$ that contains at least one element from each opinion. Therefore, $\emph{VERTEX-COVER}\le_p\emph{ELECTION}$. So \emph{ELECTION} is np-complete.
+\end{proof}
+\end{enumerate}
+
+\vspace{20pt}
+
+\textbf{Remark:} You need to include your .pdf and .tex files in your uploaded .zip file.
+
+%========================================================================
+\end{document}
